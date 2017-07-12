@@ -1,4 +1,35 @@
 # ShotBoundaryDetection
 #December 2016
 
-Desktop App to identify cuts and gradual transitions in a video file with Java Swing GUI
+Description:
+ShotBoundaryDetection implements the twin-comparison algorithm. The twin-comparison algorithm generates a set of 
+cuts and a set of gradual transitions. The steps of the algorithm are as follows:
+  -	Parse the set of frames and generate an intensity histogram for each frame
+  -	Calculate a set of frame-to-frame differences; calculate the mean and standards deviation of the frame-to-frame 
+    differences
+  -	A cut is defined as a frame with a frame-to-frame difference of the mean + 11 * standard deviation
+  -	A gradual transition is defined as a set of frames where the sum of all the frame-to-frame differences is greater 
+    than or equal to the cut threshold, the starting and ending frame of the set have a frame-to-frame difference of 
+    at least twice the mean but less than the cut threshold, no two consecutive frames are lower than the gradual 
+    transition threshold, and every frame is less than the cut threshold
+
+Limitations and Assumptions:
+  -	Video must be in mp4 format for both parsing and playback to work
+  -	Video parsing is slow due to frame conversion; offline processing would be a future improvement
+  -	Parsing is by frame number and javafx.scene.MediaPlayer seeks by MS; there is some imprecision converting between 
+    frame # and MS thus the video clip played is slightly off from the scene start picture in some cases
+
+Usage:
+  -	Video file must be named video.mp4 and must be in the current working directory (alternatively the PATH_TO_VIDEO 
+    variable can be changed and the jar file rebuilt from the source code)
+  -	Initially the GUI is blank while the video is processing; depending on the machine this can easily take more 
+    than a minute
+  -	After the video is processed the GUI is loaded
+  -	Shots are selected from the scroll pane on the right half of the GUI; the shot plays on the left half of the GUI
+
+Libraries Used
+JavaCV: JavaCV is an open-source Java implementation of OpenCV and includes a Java implementation of FFmpeg. 
+FFmpegFrameGrabber is used to grab frames from the source video. Java2DFrameConverter is used convert to convert 
+org.bytedeco.javacv.Frame to BufferedImage for intensity histogram calculation.
+
+JavaFx: A JavaFX JFXPanel and the JavaFX media libraries are used for video playback in a Swing GUI.
